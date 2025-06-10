@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr. Peanut Profile Picture Maker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Righteous&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="game-interface">
+        <!-- Sidebar with title inside for desktop -->
+        <div class="sidebar">
+            <div class="sidebar-inner">
+                <h1 class="game-title">Mr. Peanut<br>Profile Picture<br>Maker</h1>
+                
+                <div class="control-group">
+                    <div class="control-label">Current Theme: <span id="currentTheme">Remix</span></div>
+                    <button class="control-button" id="randomBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        </svg>
+                        Random Theme
+                    </button>
+
+                    <div class="dropdown">
+                        <button class="control-button" id="themeBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v20M2 12h20"/>
+                            </svg>
+                            Select Theme
+                        </button>
+                        <div class="dropdown-content" id="themeOptions">
+                            <button data-theme="remix">Remix (Dark)</button>
+                            <button data-theme="neon">Neon Party</button>
+                            <button data-theme="classic">Classic Yellow</button>
+                            <button data-theme="cyberpunk">Cyberpunk</button>
+                            <button data-theme="matrix">Matrix</button>
+                            <button data-theme="sunset">Sunset</button>
+                            <button data-theme="ocean">Ocean</button>
+                            <button data-theme="forest">Forest</button>
+                            <button data-theme="candy">Candy</button>
+                            <button data-theme="retro">Retro</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">Glow Effect: <span id="currentGlow">None</span></div>
+                    <div class="dropdown">
+                        <button class="control-button" id="glowBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2a10 10 0 0 0-10 10 10 10 0 0 0 10 10 10 10 0 0 0 10-10 10 10 0 0 0-10-10z"/>
+                                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                            </svg>
+                            Set Glow
+                        </button>
+                        <div class="dropdown-content" id="glowOptions">
+                            <button data-glow="none">No Glow</button>
+                            <button data-glow="normal">Normal</button>
+                            <button data-glow="strong">Strong</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">Export Options</div>
+                    <div class="dropdown">
+                        <button class="control-button" id="downloadBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                            </svg>
+                            Download
+                        </button>
+                        <div class="dropdown-content" id="downloadOptions">
+                            <button data-format="png">.PNG</button>
+                            <button data-format="jpg">.JPG</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile/Tablet title -->
+        <h1 class="game-title mobile-title">Mr. Peanut<br>Profile Picture Maker</h1>
+
+        <!-- Wrap the ASCII art container -->
+        <div class="ascii-wrapper">
+            <div id="ascii-art-container">
+                <div class="frame-container">
+                    <iframe id="ascii-frame" src="ascii-art.html" frameborder="0" scrolling="no"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation for Mobile/Tablet -->
+    <div class="bottom-nav">
+        <div class="bottom-nav-buttons">
+            <button class="nav-button" id="themeNavBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M2 12h20"/>
+                </svg>
+                <span>Theme</span>
+            </button>
+            <button class="nav-button" id="glowNavBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a10 10 0 0 0-10 10 10 10 0 0 0 10 10 10 10 0 0 0 10-10 10 10 0 0 0-10-10z"/>
+                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                </svg>
+                <span>Glow</span>
+            </button>
+            <button class="nav-button" id="randomNavBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+                <span>Random</span>
+            </button>
+            <button class="nav-button" id="downloadNavBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                <span>Save</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Panel for Mobile/Tablet -->
+    <div class="settings-panel" id="settingsPanel">
+        <!-- Content will be dynamically inserted based on active button -->
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

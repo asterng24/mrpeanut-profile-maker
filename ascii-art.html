@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: transparent;
+            overflow: hidden;
+        }
+
+        .art-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            box-sizing: border-box;
+            background: transparent;
+        }
+
+        pre {
+            white-space: pre;
+            line-height: 1.2;
+            margin: 0;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            text-align: center;
+            transform-origin: center;
+            font-size: 11px;
+            background: transparent;
+        }
+
+        /* For export */
+        body.for-export {
+            background: #222337;
+        }
+        
+        body.for-export .art-container {
+            width: 600px;
+            height: 600px;
+            padding: 2rem;
+        }
+        
+        body.for-export pre {
+            transform: none !important;
+        }
+
+        /* Theme styles */
+        .theme-remix .number { color: #f78c6c; }
+        .theme-remix .type { color: #82aaff; }
+        .theme-remix .keyword { color: #c792ea; }
+        .theme-remix .function { color: #c3e88d; }
+        .theme-remix .comment { color: #546e7a; font-style: italic; }
+
+        .theme-neon .number { color: #ff6ec7; }
+        .theme-neon .type { color: #00ffff; }
+        .theme-neon .keyword { color: #ffff00; }
+        .theme-neon .function { color: #39ff14; }
+        .theme-neon .comment { color: #ff9933; }
+
+        .theme-classic .number { color: #ffcc00; }
+        .theme-classic .type { color: #ff6600; }
+        .theme-classic .keyword { color: #cc0000; }
+        .theme-classic .function { color: #009900; }
+        .theme-classic .comment { color: #333333; font-style: italic; }
+
+        .theme-cyberpunk .number { color: #ff00ff; }
+        .theme-cyberpunk .type { color: #00ffff; }
+        .theme-cyberpunk .keyword { color: #ff0000; }
+        .theme-cyberpunk .function { color: #00ff00; }
+        .theme-cyberpunk .comment { color: #ff8800; }
+
+        .theme-matrix .number { color: #00ff00; }
+        .theme-matrix .type { color: #33ff33; }
+        .theme-matrix .keyword { color: #66ff66; }
+        .theme-matrix .function { color: #99ff99; }
+        .theme-matrix .comment { color: #004400; }
+
+        .theme-sunset .number { color: #ff6b6b; }
+        .theme-sunset .type { color: #ffd93d; }
+        .theme-sunset .keyword { color: #ff8e3c; }
+        .theme-sunset .function { color: #ff4949; }
+        .theme-sunset .comment { color: #6c5b7b; }
+
+        .theme-ocean .number { color: #48cae4; }
+        .theme-ocean .type { color: #00b4d8; }
+        .theme-ocean .keyword { color: #0096c7; }
+        .theme-ocean .function { color: #023e8a; }
+        .theme-ocean .comment { color: #caf0f8; }
+
+        .theme-forest .number { color: #95d5b2; }
+        .theme-forest .type { color: #74c69d; }
+        .theme-forest .keyword { color: #52b788; }
+        .theme-forest .function { color: #40916c; }
+        .theme-forest .comment { color: #2d6a4f; }
+
+        .theme-candy .number { color: #ff99c8; }
+        .theme-candy .type { color: #fcf6bd; }
+        .theme-candy .keyword { color: #d0f4de; }
+        .theme-candy .function { color: #a9def9; }
+        .theme-candy .comment { color: #e4c1f9; }
+
+        .theme-retro .number { color: #f4a261; }
+        .theme-retro .type { color: #e9c46a; }
+        .theme-retro .keyword { color: #2a9d8f; }
+        .theme-retro .function { color: #264653; }
+        .theme-retro .comment { color: #e76f51; }
+
+        .theme-random .number { color: var(--random-number); }
+        .theme-random .type { color: var(--random-type); }
+        .theme-random .keyword { color: var(--random-keyword); }
+        .theme-random .function { color: var(--random-function); }
+        .theme-random .comment { color: var(--random-comment); }
+
+        /* Glow effects */
+        .glow-normal span {
+            text-shadow: 0 0 4px currentColor, 0 0 8px currentColor;
+        }
+
+        .glow-strong span {
+            text-shadow: 0 0 8px currentColor, 0 0 16px currentColor, 0 0 24px currentColor, 0 0 32px currentColor;
+        }
+    </style>
+</head>
+<body>
+    <div class="art-container">
+        <pre id="ascii-art" class="theme-remix">
+                                               <span class="number">GWEI;</span>                        
+                                          <span class="number">0xf4e</span><span class="comment">mys</span><span class="number">ET</span>                        
+                                     <span class="number">21000</span><span class="comment">e{</span><span class="number">!</span><span class="comment">````</span><span class="number">BT</span>                        
+                                  <span class="number">0x5f2</span><span class="comment">;'```,_`."</span><span class="number">!</span><span class="number">WEI</span>                       
+                               <span class="number">ETHX</span><span class="comment">|.-</span><span class="number">!</span><span class="comment">.``,:'``-:``</span><span class="number">BTC</span>                      
+                             <span class="number">0x1c</span><span class="comment">'`'</span><span class="number">~</span><span class="comment">.``'".````.</span><span class="number">!</span><span class="comment">`_'</span><span class="number">?8I`</span>                    
+                           <span class="number">embe</span><span class="comment">````````."``````'</span><span class="number">;</span><span class="comment">`_~</span><span class="number">get</span>                   
+                          <span class="number">LRc</span><span class="comment">```-</span><span class="number">:</span><span class="comment">````.</span><span class="number">!</span><span class="comment">````'-``</span><span class="number">;</span><span class="comment">'`'```</span><span class="number">b#.</span>                  
+                         <span class="number">kD_</span><span class="comment">``.</span><span class="number">~</span><span class="comment">,````'</span><span class="number">~</span><span class="comment">````-;</span><span class="number">~</span><span class="comment">``</span><span class="number">!</span><span class="comment">-```''</span><span class="number">rub</span>                  
+                        <span class="number">url</span><span class="comment">``````````"'````'-```_,```</span><span class="number">:</span><span class="comment">;`</span><span class="number">fig</span>                 
+                       <span class="number">kbd</span><span class="comment">`'-````````'``````````</span><span class="number">:</span><span class="comment">_```'_'</span><span class="number">adr</span>                 
+                       <span class="number">div</span><span class="comment">';_`'</span><span class="type">slot</span><span class="comment">'```````</span><span class="type">obj</span><span class="comment">`'````'```</span><span class="number">zPs</span>                 
+                       <span class="number">x8</span><span class="comment">`'.``</span><span class="type">basefon</span><span class="comment">``````</span><span class="type">ri:dpr</span><span class="comment">````````</span><span class="number">tem</span>                 
+                       <span class="number">a:</span><span class="comment">````</span><span class="type">uint256</span><span class="comment">`````</span><span class="type">;payabl</span><span class="comment">`````</span><span class="number">~</span><span class="comment">'`</span><span class="number">col</span>                 
+              <span class="keyword">consol</span>   <span class="number">wbr</span><span class="comment">````</span><span class="type">tarea:</span><span class="comment">`````</span><span class="type">response</span><span class="comment">````:</span><span class="number">~</span><span class="comment">`'</span><span class="number">0$</span>                  
+     <span class="keyword">eTokenMinted();</span>   <span class="number">cmd</span><span class="comment">``___</span><span class="type">link</span><span class="comment">```````</span><span class="type">;CmS~</span><span class="comment">`````,'`</span><span class="number">fig</span>                  
+    <span class="keyword">emit Transf  er;</span>     <span class="number">x0</span><span class="comment">`</span><span class="function">prog</span><span class="comment">```</span><span class="keyword">um\</span><span class="comment">```</span><span class="keyword">/pt</span><span class="comment">```</span><span class="function">temp</span><span class="comment">````</span><span class="number">emb</span>                   
+  <span class="keyword">authToken     @ws</span>     <span class="number">dl</span><span class="comment">_'</span><span class="function">::'</span><span class="comment">```</span><span class="keyword">contract{</span><span class="comment">``,</span><span class="function">var</span><span class="comment">-```</span><span class="number">map</span>                    
+  <span class="keyword">validate       nav</span>     <span class="number">pre</span><span class="comment">````````</span><span class="keyword">mapping</span><span class="comment">`````'````</span><span class="number">bdi</span>                     
+  <span class="keyword">ri:          type</span>     <span class="number">img</span><span class="comment">``````````'.`````````````</span><span class="number">wbr</span>                     
+  <span class="keyword">JSON.stringi fy=?</span>   <span class="number">func</span><span class="comment">`.</span><span class="number">~</span><span class="comment">````".`````````</span><span class="number">;</span><span class="comment">````</span><span class="number">~</span><span class="comment">'`</span><span class="number">payable</span>                 
+       <span class="keyword">response.ok</span><span class="number">response</span><span class="comment">`,</span><span class="number">~</span><span class="comment">'```,</span><span class="number">:</span><span class="comment">``````````</span><span class="number">;</span><span class="comment">'```.</span><span class="number">;</span><span class="comment">'`</span><span class="number">setTimeout</span>              
+          <span class="number">uint256amount</span><span class="comment">``.:````.</span><span class="number">;</span><span class="comment">`````-</span><span class="number">;</span><span class="comment">.```:-````'</span><span class="number">!</span><span class="comment">`</span><span class="number">proc   essTra</span>           
+              <span class="number">initiali</span><span class="comment">`````````</span><span class="number">~</span><span class="comment">-`````-"'```.</span><span class="number">!</span><span class="comment">````````</span><span class="number">Min    ingSt</span>          
+                  <span class="number">Sig</span><span class="comment">`````````-</span><span class="number">!</span><span class="comment">`````````````</span><span class="number">;</span><span class="comment">'``'</span><span class="number">~</span><span class="comment">````</span><span class="number">Payl  oadBu</span>          
+                 <span class="number">ini</span><span class="comment">`'~</span><span class="number">;</span><span class="comment">'`````</span><span class="number">~</span><span class="comment">'`````````````</span><span class="number">:</span><span class="comment">,``'</span><span class="number">;</span><span class="comment">.````</span><span class="number">mintToken</span>           
+                <span class="number">All</span><span class="comment">``'</span><span class="number">;</span><span class="comment">_`````.</span><span class="number">~</span><span class="comment">```</span><span class="number">:</span><span class="comment">~`````````-</span><span class="number">!</span><span class="comment">``````_</span><span class="keyword">approve</span><span class="number">web</span>            
+                <span class="number">400</span><span class="comment">``````````__``.;"`````````.</span><span class="number">~</span><span class="comment">````'</span><span class="keyword">emit{L og()}`</span>            
+                <span class="number">Key</span><span class="comment">``````````</span><span class="number">!</span><span class="comment">.```'```````'``.</span><span class="number">~</span><span class="comment">````</span><span class="keyword">as       Ter</span>             
+                <span class="number">eth</span><span class="comment">``</span><span class="number">~</span><span class="comment">-``````</span><span class="number">~</span><span class="comment">.`````````.</span><span class="number">;</span><span class="comment">;'`-"```</span><span class="keyword">get       post</span>             
+                <span class="number">a:</span><span class="comment">``:;``````</span><span class="number">!</span><span class="comment">-`````````_"-``</span><span class="number">:</span><span class="comment">,```</span><span class="keyword">set      Token</span>            
+                <span class="number">js{</span><span class="comment">`````````,</span><span class="number">:</span><span class="comment">``````````````</span><span class="number">;</span><span class="comment">'````</span><span class="keyword">mint   Config</span>            
+                 <span class="number">err</span><span class="comment">`````````</span><span class="number">;</span><span class="comment">'``</span><span class="number">~</span><span class="comment">.````````_</span><span class="number">:</span><span class="comment">```_.`'</span><span class="keyword">safeTransfer</span>             
+                   <span class="number">set</span><span class="comment">-`.</span><span class="number">~</span><span class="comment">-```,</span><span class="number">!</span><span class="comment">``-.```````.</span><span class="number">~</span><span class="comment">```;:```</span><span class="number">deployC</span>                
+                    <span class="number">`i#y</span><span class="comment">_`-.```:</span><span class="number">:</span><span class="comment">`````'</span><span class="number">~</span><span class="comment">-`.</span><span class="number">~</span><span class="comment">'```'``</span><span class="number">err{</span>                     
+                      <span class="number">=owner</span><span class="comment">````-"````_'`</span><span class="number">!</span><span class="comment">:````.</span><span class="number">init(</span>                       
+                         <span class="number">setConfig</span><span class="comment">,.'''-_</span><span class="number">msg.value}</span>                         
+                           <span class="number">blockchainSignatureKey</span>                            
+                           <span class="number">signTxn</span>        <span class="number">require</span>                            
+                           <span class="number">config</span>        <span class="number">ERC721</span>                            
+                       <span class="type">transferFrom        getUserData</span>                        
+                      <span class="type">transferToken()</span><span class="function">``````</span><span class="type">executeTrade()</span>                      
+               <span class="function">```````</span><span class="type">verifyProof()</span><span class="function">``````</span><span class="type">mint(address)</span><span class="function">``````                
+               ``````````.''`````````````````.---,-.`````````               
+                    ````````````````````````````````````</span>                   
+        </pre>
+    </div>
+    <script>
+        // Generate random HSL color
+        function randomHSLColor(saturation = 100, lightness = 70) {
+            const hue = Math.floor(Math.random() * 360);
+            return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        }
+
+        // Generate random color scheme
+        function generateRandomColors() {
+            const root = document.documentElement;
+            root.style.setProperty('--random-number', randomHSLColor());
+            root.style.setProperty('--random-type', randomHSLColor());
+            root.style.setProperty('--random-keyword', randomHSLColor());
+            root.style.setProperty('--random-function', randomHSLColor());
+            root.style.setProperty('--random-comment', randomHSLColor(30, 60));
+        }
+
+        // Handle messages from parent window
+        window.addEventListener('message', function(event) {
+            const ascii = document.getElementById('ascii-art');
+            const currentClasses = ascii.className.split(' ');
+            
+            if (event.data.theme) {
+                // Remove any existing theme class
+                currentClasses.forEach((cls, index) => {
+                    if (cls.startsWith('theme-')) {
+                        currentClasses.splice(index, 1);
+                    }
+                });
+                
+                // Add new theme class
+                if (event.data.theme === 'random') {
+                    generateRandomColors();
+                }
+                currentClasses.push(`theme-${event.data.theme}`);
+            }
+            
+            if (event.data.glow !== undefined) {
+                // Remove any existing glow class
+                currentClasses.forEach((cls, index) => {
+                    if (cls.startsWith('glow-')) {
+                        currentClasses.splice(index, 1);
+                    }
+                });
+                
+                // Add new glow class if not 'none'
+                if (event.data.glow !== 'none') {
+                    currentClasses.push(`glow-${event.data.glow}`);
+                }
+            }
+            
+            // Update the class list
+            ascii.className = currentClasses.join(' ');
+        });
+
+        // Auto-scale function
+        function scaleAsciiArt() {
+            const pre = document.getElementById('ascii-art');
+            const container = document.querySelector('.art-container');
+            
+            // Get container dimensions
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            
+            // Get content dimensions
+            const contentWidth = pre.scrollWidth;
+            const contentHeight = pre.scrollHeight;
+            
+            // Calculate scale ratios considering padding
+            const padding = 48; // 1.5rem * 16px = 24px * 2
+            const availableWidth = containerWidth - padding;
+            const availableHeight = containerHeight - padding;
+            
+            const horizontalScale = availableWidth / contentWidth;
+            const verticalScale = availableHeight / contentHeight;
+            
+            // Use the smaller scale to ensure content fits both dimensions
+            const scale = Math.min(horizontalScale, verticalScale, 1);
+            
+            // Apply the transform
+            pre.style.transform = `scale(${scale})`;
+        }
+
+        // Add event listeners
+        window.addEventListener('resize', scaleAsciiArt);
+        window.addEventListener('load', scaleAsciiArt);
+    </script>
+</body>
+</html> 
