@@ -206,15 +206,15 @@ function closeAllDropdowns() {
 
 // Mobile Navigation
 function setupMobileNav() {
-    const settingsPanel = document.getElementById('settingsPanel');
     const navButtons = document.querySelectorAll('.nav-button');
     
-    function showPanel(content) {
-        settingsPanel.innerHTML = content;
-        settingsPanel.classList.add('show');
+    function showModal(content) {
+        const modalContent = modalOverlay.querySelector('.modal-content');
+        modalContent.innerHTML = content;
+        modalOverlay.classList.add('show');
     }
     
-    function createPanelContent(type) {
+    function createModalContent(type) {
         switch(type) {
             case 'theme':
                 return `
@@ -254,6 +254,8 @@ function setupMobileNav() {
                         </div>
                     </div>
                 `;
+            default:
+                return '';
         }
     }
     
@@ -267,22 +269,31 @@ function setupMobileNav() {
                 return;
             }
             
-            if (activeNavButton === button) {
+            if (activeNavButton === button && modalOverlay.classList.contains('show')) {
+                modalOverlay.classList.remove('show');
                 button.classList.remove('active');
-                settingsPanel.classList.remove('show');
                 activeNavButton = null;
             } else {
                 navButtons.forEach(b => b.classList.remove('active'));
                 button.classList.add('active');
-                showPanel(createPanelContent(type));
+                showModal(createModalContent(type));
                 activeNavButton = button;
             }
         });
     });
     
-    // Handle settings panel option clicks
-    settingsPanel.addEventListener('click', (e) => {
+    // Handle modal option clicks
+    modalOverlay.addEventListener('click', (e) => {
         const option = e.target.closest('.settings-option');
+        const isOverlay = e.target === modalOverlay;
+        
+        if (isOverlay) {
+            modalOverlay.classList.remove('show');
+            navButtons.forEach(b => b.classList.remove('active'));
+            activeNavButton = null;
+            return;
+        }
+        
         if (!option) return;
         
         if (option.dataset.theme) {
@@ -290,12 +301,7 @@ function setupMobileNav() {
         } else if (option.dataset.glow) {
             setGlow(option.dataset.glow);
         } else if (option.dataset.format) {
-            console.log('Mobile export clicked:', option.dataset.format); // Debug log
             exportImage(option.dataset.format);
-            // Close panel after initiating download
-            settingsPanel.classList.remove('show');
-            navButtons.forEach(b => b.classList.remove('active'));
-            activeNavButton = null;
         }
         
         // Update active states
@@ -303,16 +309,11 @@ function setupMobileNav() {
             opt.classList.remove('active');
         });
         option.classList.add('active');
-    });
-    
-    // Close panel when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.settings-panel') && 
-            !e.target.closest('.nav-button')) {
-            settingsPanel.classList.remove('show');
-            navButtons.forEach(b => b.classList.remove('active'));
-            activeNavButton = null;
-        }
+        
+        // Close modal after selection
+        modalOverlay.classList.remove('show');
+        navButtons.forEach(b => b.classList.remove('active'));
+        activeNavButton = null;
     });
 }
 
@@ -346,77 +347,230 @@ function exportImage(format) {
     console.log('Starting export:', format);
     
     const iframe = document.getElementById('ascii-frame');
-    const frameContainer = document.querySelector(".frame-container");
     
     // Get the iframe content
     const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
     const asciiArt = iframeDoc.querySelector('#ascii-art');
     
-    if (!asciiArt || !frameContainer) {
+    if (!asciiArt) {
         console.error('Required elements not found');
         return;
     }
 
     // Create a temporary container for the clone
     const tempContainer = document.createElement('div');
-    tempContainer.style.position = 'absolute';
+    tempContainer.style.position = 'fixed';
     tempContainer.style.left = '-9999px';
-    tempContainer.style.top = '0';
-    document.body.appendChild(tempContainer);
-    
-    // Clone the ASCII art
-    const clone = asciiArt.cloneNode(true);
-    tempContainer.appendChild(clone);
-    
-    // Apply current theme and glow
-    clone.className = asciiArt.className;
+    tempContainer.style.width = '1600px';  // Larger canvas for better quality
+    tempContainer.style.height = '1600px';
     tempContainer.style.background = '#222337';
-    tempContainer.style.width = '600px';
-    tempContainer.style.height = '600px';
     tempContainer.style.display = 'flex';
     tempContainer.style.alignItems = 'center';
     tempContainer.style.justifyContent = 'center';
-    tempContainer.style.padding = '2rem';
-    tempContainer.style.boxSizing = 'border-box';
     
-    // Capture the clone
-    html2canvas(tempContainer, {
-        backgroundColor: "#222337",
-        scale: 2,
-        logging: true,
-        width: 600,
-        height: 600
-    }).then(canvas => {
-        // Create download link
-        const link = document.createElement('a');
-        link.download = `ascii-peanut.${format}`;
-        
-        if (format === 'jpg') {
-            const jpgCanvas = document.createElement('canvas');
-            jpgCanvas.width = canvas.width;
-            jpgCanvas.height = canvas.height;
-            const ctx = jpgCanvas.getContext('2d');
-            
-            ctx.fillStyle = '#222337';
-            ctx.fillRect(0, 0, jpgCanvas.width, jpgCanvas.height);
-            ctx.drawImage(canvas, 0, 0);
-            
-            link.href = jpgCanvas.toDataURL('image/jpeg', 0.9);
-        } else {
-            link.href = canvas.toDataURL('image/png');
+    // Create art container (matches ascii-art.html structure)
+    const artContainer = document.createElement('div');
+    artContainer.style.position = 'relative';
+    artContainer.style.width = '1000px';
+    artContainer.style.height = '1000px';
+    artContainer.style.display = 'flex';
+    artContainer.style.alignItems = 'center';
+    artContainer.style.justifyContent = 'center';
+    artContainer.style.padding = '1.5rem'; 
+    artContainer.style.boxSizing = 'border-box';
+    artContainer.style.background = 'transparent';
+    tempContainer.appendChild(artContainer);
+    
+    // Clone and style the ASCII art
+    const clone = asciiArt.cloneNode(true);
+    clone.style.whiteSpace = 'pre';
+    clone.style.lineHeight = '1.2';
+    clone.style.margin = '0';
+    clone.style.fontFamily = "'IBM Plex Mono', monospace";
+    clone.style.fontWeight = '500';
+    clone.style.letterSpacing = '-0.02em';
+    clone.style.textAlign = 'center';
+    clone.style.fontSize = '11px';
+    clone.style.background = 'transparent';
+    clone.style.transform = 'none';
+    clone.className = asciiArt.className;
+
+    // Add theme styles directly
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+        /* Theme styles */
+        .theme-remix .number { color: #f78c6c; }
+        .theme-remix .type { color: #82aaff; }
+        .theme-remix .keyword { color: #c792ea; }
+        .theme-remix .function { color: #c3e88d; }
+        .theme-remix .comment { color: #546e7a; font-style: italic; }
+
+        .theme-neon .number { color: #ff6ec7; }
+        .theme-neon .type { color: #00ffff; }
+        .theme-neon .keyword { color: #ffff00; }
+        .theme-neon .function { color: #39ff14; }
+        .theme-neon .comment { color: #ff9933; }
+
+        .theme-classic .number { color: #ffcc00; }
+        .theme-classic .type { color: #ff6600; }
+        .theme-classic .keyword { color: #cc0000; }
+        .theme-classic .function { color: #009900; }
+        .theme-classic .comment { color: #333333; font-style: italic; }
+
+        .theme-cyberpunk .number { color: #ff00ff; }
+        .theme-cyberpunk .type { color: #00ffff; }
+        .theme-cyberpunk .keyword { color: #ff0000; }
+        .theme-cyberpunk .function { color: #00ff00; }
+        .theme-cyberpunk .comment { color: #ff8800; }
+
+        .theme-matrix .number { color: #00ff00; }
+        .theme-matrix .type { color: #33ff33; }
+        .theme-matrix .keyword { color: #66ff66; }
+        .theme-matrix .function { color: #99ff99; }
+        .theme-matrix .comment { color: #004400; }
+
+        .theme-sunset .number { color: #ff6b6b; }
+        .theme-sunset .type { color: #ffd93d; }
+        .theme-sunset .keyword { color: #ff8e3c; }
+        .theme-sunset .function { color: #ff4949; }
+        .theme-sunset .comment { color: #6c5b7b; }
+
+        .theme-ocean .number { color: #48cae4; }
+        .theme-ocean .type { color: #00b4d8; }
+        .theme-ocean .keyword { color: #0096c7; }
+        .theme-ocean .function { color: #023e8a; }
+        .theme-ocean .comment { color: #caf0f8; }
+
+        .theme-forest .number { color: #95d5b2; }
+        .theme-forest .type { color: #74c69d; }
+        .theme-forest .keyword { color: #52b788; }
+        .theme-forest .function { color: #40916c; }
+        .theme-forest .comment { color: #2d6a4f; }
+
+        .theme-candy .number { color: #ff99c8; }
+        .theme-candy .type { color: #fcf6bd; }
+        .theme-candy .keyword { color: #d0f4de; }
+        .theme-candy .function { color: #a9def9; }
+        .theme-candy .comment { color: #e4c1f9; }
+
+        .theme-retro .number { color: #f4a261; }
+        .theme-retro .type { color: #e9c46a; }
+        .theme-retro .keyword { color: #2a9d8f; }
+        .theme-retro .function { color: #264653; }
+        .theme-retro .comment { color: #e76f51; }
+
+        /* Glow effects */
+        .glow-normal span {
+            text-shadow: 0 0 4px currentColor, 0 0 8px currentColor;
         }
-        
-        // Trigger download
-        document.body.appendChild(link);
-        link.click();
-        
-        // Cleanup
-        document.body.removeChild(link);
-        document.body.removeChild(tempContainer);
-        
-    }).catch(error => {
-        console.error('Export failed:', error);
-        document.body.removeChild(tempContainer);
+
+        .glow-strong span {
+            text-shadow: 0 0 8px currentColor, 0 0 16px currentColor, 0 0 24px currentColor, 0 0 32px currentColor;
+        }
+    `;
+    tempContainer.appendChild(styleElement);
+    
+    // For random theme, copy CSS variables
+    if (clone.classList.contains('theme-random')) {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const computedStyle = iframeDoc.documentElement.style;
+        const randomStyle = document.createElement('style');
+        randomStyle.textContent = `
+            :root {
+                --random-number: ${computedStyle.getPropertyValue('--random-number')};
+                --random-type: ${computedStyle.getPropertyValue('--random-type')};
+                --random-keyword: ${computedStyle.getPropertyValue('--random-keyword')};
+                --random-function: ${computedStyle.getPropertyValue('--random-function')};
+                --random-comment: ${computedStyle.getPropertyValue('--random-comment')};
+            }
+            .theme-random .number { color: var(--random-number); }
+            .theme-random .type { color: var(--random-type); }
+            .theme-random .keyword { color: var(--random-keyword); }
+            .theme-random .function { color: var(--random-function); }
+            .theme-random .comment { color: var(--random-comment); }
+        `;
+        tempContainer.appendChild(randomStyle);
+    }
+    
+    artContainer.appendChild(clone);
+    
+    // Add required font
+    const fontLink = document.createElement('link');
+    fontLink.href = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap';
+    fontLink.rel = 'stylesheet';
+    tempContainer.appendChild(fontLink);
+    
+    // Add to document for rendering
+    document.body.appendChild(tempContainer);
+    
+    // Wait for font to load
+    document.fonts.ready.then(() => {
+        // Capture with html2canvas
+        html2canvas(tempContainer, {
+            backgroundColor: "#222337",
+            scale: 2,
+            logging: false,
+            width: 1600,
+            height: 1600,
+            onclone: function(clonedDoc) {
+                const clonedArt = clonedDoc.querySelector('#ascii-art');
+                if (clonedArt) {
+                    clonedArt.style.whiteSpace = 'pre';
+                    clonedArt.style.lineHeight = '1.2';
+                    clonedArt.style.margin = '0';
+                    clonedArt.style.fontFamily = "'IBM Plex Mono', monospace";
+                    clonedArt.style.fontWeight = '500';
+                    clonedArt.style.letterSpacing = '-0.02em';
+                    clonedArt.style.textAlign = 'center';
+                    clonedArt.style.fontSize = '11px';
+                    clonedArt.style.background = 'transparent';
+                    clonedArt.style.transform = 'none';
+                }
+            }
+        }).then(canvas => {
+            // Create download link
+            const link = document.createElement('a');
+            link.download = `ascii-peanut.${format}`;
+            
+            // Create a new canvas with the desired output size
+            const outputCanvas = document.createElement('canvas');
+            const outputSize = 1024; // Final image size
+            outputCanvas.width = outputSize;
+            outputCanvas.height = outputSize;
+            const ctx = outputCanvas.getContext('2d');
+            
+            // Fill background
+            ctx.fillStyle = '#222337';
+            ctx.fillRect(0, 0, outputSize, outputSize);
+            
+            // Calculate scaling to fit the art properly with padding
+            const scale = (outputSize * 1.05) / 1600; // Increased scale to 105% of output size
+            const scaledWidth = canvas.width * scale;
+            const scaledHeight = canvas.height * scale;
+            const x = (outputSize - scaledWidth) / 2;
+            const y = (outputSize - scaledHeight) / 2;
+            
+            // Draw the scaled image
+            ctx.drawImage(canvas, x, y, scaledWidth, scaledHeight);
+            
+            if (format === 'jpg') {
+                link.href = outputCanvas.toDataURL('image/jpeg', 1.0);
+            } else {
+                link.href = outputCanvas.toDataURL('image/png');
+            }
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            
+            // Cleanup
+            document.body.removeChild(link);
+            document.body.removeChild(tempContainer);
+            
+        }).catch(error => {
+            console.error('Export failed:', error);
+            document.body.removeChild(tempContainer);
+        });
     });
 }
 
@@ -486,3 +640,69 @@ document.addEventListener('DOMContentLoaded', () => {
         updateIframeGlow();
     });
 });
+
+// Add modal overlay to the DOM
+const modalOverlay = document.createElement('div');
+modalOverlay.className = 'modal-overlay';
+modalOverlay.innerHTML = '<div class="modal-content"></div>';
+document.body.appendChild(modalOverlay);
+
+// Update showThemeOptions function
+function showThemeOptions() {
+    const isMobileOrTablet = window.innerWidth <= 1024;
+    const themeOptions = document.getElementById('themeOptions');
+    
+    if (isMobileOrTablet) {
+        const modalContent = modalOverlay.querySelector('.modal-content');
+        modalContent.innerHTML = ''; // Clear existing content
+        modalContent.appendChild(themeOptions);
+        modalOverlay.classList.add('show');
+        
+        // Close modal when clicking outside
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('show');
+            }
+        });
+        
+        // Close modal after selecting a theme
+        const themeButtons = themeOptions.querySelectorAll('button');
+        themeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modalOverlay.classList.remove('show');
+            });
+        });
+    } else {
+        themeOptions.style.display = themeOptions.style.display === 'none' ? 'grid' : 'none';
+    }
+}
+
+// Update showGlowOptions function
+function showGlowOptions() {
+    const isMobileOrTablet = window.innerWidth <= 1024;
+    const glowOptions = document.getElementById('glowOptions');
+    
+    if (isMobileOrTablet) {
+        const modalContent = modalOverlay.querySelector('.modal-content');
+        modalContent.innerHTML = ''; // Clear existing content
+        modalContent.appendChild(glowOptions);
+        modalOverlay.classList.add('show');
+        
+        // Close modal when clicking outside
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('show');
+            }
+        });
+        
+        // Close modal after selecting a glow option
+        const glowButtons = glowOptions.querySelectorAll('button');
+        glowButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modalOverlay.classList.remove('show');
+            });
+        });
+    } else {
+        glowOptions.style.display = glowOptions.style.display === 'none' ? 'block' : 'none';
+    }
+}
