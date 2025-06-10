@@ -1,4 +1,4 @@
-# ASCII Art Profile Picture Maker
+# Mr Peanut ASCII Art Profile Picture Maker
 
 A web-based tool that generates stylized ASCII art profile pictures with various themes and effects.
 
